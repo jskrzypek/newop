@@ -1,0 +1,14 @@
+{
+  "generator-mcfly": {
+    "filenameCase": "camel",
+    "filenameSuffix": false,
+    "appname": "newop",
+    "clientFolder": "client",
+    "ionic": false,
+    "famous": false,
+    "ngCordova": false,
+    "fontawesome": false,
+    "bootstrap": false,
+    "material": false
+  }
+}
