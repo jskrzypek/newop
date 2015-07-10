@@ -52,22 +52,40 @@ gulp.task('changelog:conventional', false, function(cb) {
     });
 });
 
+// var addsrc = require('gulp-add-src');
+var es = require
+var order = $.order;
+
 gulp.task('changelog:script', false, function(cb) {
     var pkg = helper.readJsonFile('./package.json');
     var options = argv;
     var version = options.version || pkg.version;
     var from = options.from || '';
-    var streamqueue = require('streamqueue');
-    var stream = streamqueue({
-        objectMode: true
-    });
+    // gulp.src('')
+    //     .pipe(exec('node ./gulp_tasks/common/changelog-script.js ' + version + ' ' + from, {
+    //         pipeStdout: true
+    //     }))
+    //     .pipe(concat('updates.md'))
+    //     .pipe(addsrc('CHANGELOG.md'))
+    //     .pipe(order(['updates.md','CHANGELOG.md']))
+    //     .pipe(concat('CHANGELOG.md'))
+    //     .pipe(gulp.dest('./'))
+    //     .on('end', cb);
 
-    stream.queue(gulp.src('').pipe(exec('node ./gulp_tasks/common/changelog-script.js ' + version + ' ' + from, {
-        pipeStdout: true
-    })));
-    stream.queue(gulp.src('CHANGELOG.md'));
-
-    stream.done()
+    var addSrc = function() {
+        var pass = es.through();
+        return es.duplex(pass, es.merge(gulp.src.apply(gulp.src, arguments), pass));
+    };
+    gulp.src('')
+        .pipe(exec('node ./gulp_tasks/common/changelog-script.js ' + version + ' ' + from, {
+            pipeStdout: true
+        }))
+        .pipe(concat('updates.md'))
+        // .on('end', function() {
+        //     return gulp.src('CHANGELOG.md');
+        // })
+        .pipe(addSrc('CHANGELOG.md'))
+        .pipe(order(['updates.md', 'CHANGELOG.md']))
         .pipe(concat('CHANGELOG.md'))
         .pipe(gulp.dest('./'))
         .on('end', cb);
